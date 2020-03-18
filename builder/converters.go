@@ -1,4 +1,4 @@
-package gsonBuilder
+package builder
 
 import "unicode"
 
@@ -11,7 +11,7 @@ func upperCaseFirst(str string) string {
 }
 
 //Set first character to lowercase
-func lgiowerCaseFirst(str string) string {
+func lowerCaseFirst(str string) string {
 	for i, v := range str {
 		return string(unicode.ToLower(v)) + str[i+1:]
 	}

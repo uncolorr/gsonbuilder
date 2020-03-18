@@ -1,11 +1,18 @@
 package main
 
 import (
-	"jsontogson/gsonBuilder"
+	"fmt"
+	"github.com/uncolorr/gsonbuilder/builder"
+	"log"
 )
 
-func main()  {
-	var builder gsonBuilder.GsonClassBuilder
-	builder.Parse("")
+func main() {
+
+	var gsonClassBuilder builder.GsonClassBuilder
+	res, err := gsonClassBuilder.Parse("")
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(res)
 
 }

@@ -1,8 +1,6 @@
-package gsonBuilder
+package builder
 
 import "math"
-
-
 
 // Determines the type of json value
 // Return name of primitive type as string

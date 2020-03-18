@@ -1,11 +1,11 @@
-package gsonBuilder
+package builder
 
 type class struct {
-	name string
+	name       string
 	properties []property
 }
+
 // Set name and set first character to uppercase
-func(class* class) setNameWithFormat(name string)  {
+func (class *class) setNameWithFormat(name string) {
 	class.name = upperCaseFirst(name)
 }
-

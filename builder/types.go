@@ -22,3 +22,23 @@ func TypeOf(v interface{}) string {
 		return "Any"
 	}
 }
+
+func isPrimitiveType(v interface{}) bool {
+	switch v.(type) {
+	case int:
+		return true
+	case float64:
+		_, b := math.Modf(v.(float64))
+		if b == 0 {
+			return true
+		}
+		return true
+	case bool:
+		return true
+	case string:
+		return true
+	default:
+		return false
+	}
+}
+

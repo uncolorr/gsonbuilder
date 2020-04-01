@@ -3,10 +3,12 @@ package builder
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"reflect"
 )
 
 type GsonClassBuilder struct {
+	 itemIndex int
 }
 
 // Parse json data and generate classes as string
@@ -17,6 +19,7 @@ func (builder *GsonClassBuilder) Parse(jsonData string) (string, error) {
 	if err != nil {
 		return "", err
 	}
+	//fmt.Println(m)
 	var classes []class
 
 	builder.parseMapData(m, "Root", &classes)
@@ -39,6 +42,43 @@ func (builder *GsonClassBuilder) parseMapData(m map[string]interface{}, classNam
 
 	for k, v := range m {
 		var property property
+		//println(reflect.TypeOf(v))
+
+		//fmt.Println(reflect.TypeOf(make([]interface{}, 0)).String())
+		//fmt.Println("t: " + reflect.TypeOf(v).String())
+		if reflect.TypeOf(v) == reflect.TypeOf(make([]interface{}, 0)) {
+			//fmt.Printf(reflect.TypeOf(v).Elem().String())
+			m := v.([]interface{})
+			if len(m) == 0 {
+				property.setTypeWithFormat("List<Any>")
+				property.serializedName = k
+				property.setNameWithFormat(k)
+				properties = append(properties, property)
+				continue
+			}
+			elem := m[0]
+			if isPrimitiveType(elem) {
+				property.setTypeWithFormat("List<" + TypeOf(elem) + ">")
+				property.serializedName = k
+				property.setNameWithFormat(k)
+				properties = append(properties, property)
+				continue
+			}
+
+			if reflect.TypeOf(elem) == reflect.TypeOf(make(map[string]interface{})) {
+				builder.itemIndex++
+				elemClassName := fmt.Sprintf("%s%d", "Item", builder.itemIndex)
+				property.setTypeWithFormat("List<" + elemClassName + ">")
+				property.serializedName = k
+				property.setNameWithFormat(k)
+				properties = append(properties, property)
+				builder.parseMapData(elem.(map[string]interface{}), elemClassName, classes)
+				continue
+			}
+			fmt.Println("elem type: " + reflect.TypeOf(elem).String())
+			fmt.Println(elem)
+		}
+
 		if reflect.TypeOf(v) == reflect.TypeOf(make(map[string]interface{})) {
 			property.setTypeWithFormat(k)
 			property.serializedName = k

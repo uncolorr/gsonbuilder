@@ -172,7 +172,7 @@ func (*GsonClassBuilder) jsonArrayToJsonObjectFormat(data string) string {
 }
 
 func (*GsonClassBuilder) replaceQuotesWithFormat(data string) string {
-	data = strings.ReplaceAll(data, "”", "\"")
+	data = strings.ReplaceAll(data, "“", "\"")
 	return data
 }
 

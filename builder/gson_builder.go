@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"reflect"
+	"strings"
 )
 
 type GsonClassBuilder struct {
@@ -15,6 +16,10 @@ type GsonClassBuilder struct {
 // It returns all generated classes as one string or error if json format is invalid
 
 func (builder *GsonClassBuilder) Parse(jsonData string) (string, error) {
+
+	jsonData = builder.replaceQuotesWithFormat(jsonData)
+	jsonData = builder.jsonArrayToJsonObjectFormat(jsonData)
+
 	m, err := builder.convertToMap([]byte(jsonData))
 	if err != nil {
 		return "", err
@@ -147,3 +152,27 @@ func (*GsonClassBuilder) convertToMap(data []byte) (map[string]interface{}, erro
 	}
 	return m, nil
 }
+
+func (*GsonClassBuilder) jsonArrayToJsonObjectFormat(data string) string {
+	if len(data) < 2 {
+		return data
+	}
+ 	firstCh := data[0]
+	lastCh := data[len(data) - 1]
+
+	if firstCh == '[' && lastCh == ']' {
+		buf := bytes.Buffer{}
+		buf.WriteString("{")
+		buf.WriteString("\"array\":")
+		buf.WriteString(data)
+		buf.WriteString("}")
+		return buf.String()
+	}
+	return data
+}
+
+func (*GsonClassBuilder) replaceQuotesWithFormat(data string) string {
+	data = strings.ReplaceAll(data, "”", "\"")
+	return data
+}
+

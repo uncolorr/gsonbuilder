@@ -8,7 +8,8 @@ import (
 
 func main() {
 	var gsonClassBuilder builder.GsonClassBuilder
-	res, err := gsonClassBuilder.Parse("{\"foo\":[{\"m\":3}], \"m\":5, \"arr\":[4,5]}")
+	jsonData := "[{”foo”:[{”m”:3}], \"m\":5, \"arr\":[4,5]}]"
+	res, err := gsonClassBuilder.Parse(jsonData)
 	if err != nil {
 		log.Fatal(err)
 	}
